@@ -4,15 +4,18 @@ Compiled from various source: [GEE Help](https://developers.google.com/earth-eng
 ## Climate
 ### Monthly Weather Monitoring
 Script: [weather_monitoring.js](https://github.com/wfpidn/GEE/blob/master/script/weather_monitoring.js)
+
 ![Monthly Weather Monitoring](/img/mwm.png)
 
 ## Disaster preparedness and response
 ### Frequency of pixel with water
 Script: [frequency-pixel-with-water.js](https://github.com/wfpidn/GEE/blob/master/script/frequency-pixel-with-water.js)
+
 ![Flood frequency](/img/ff.png)
 
 ### Extract 10-days rainfallaccumulation before landslide happen
 Script: [extract-rainfall-latlon.js](https://github.com/wfpidn/GEE/blob/master/script/extract-rainfall-latlon.js)
+
 ![Rainfall 30min](/img/rain30min.png)
 
 
