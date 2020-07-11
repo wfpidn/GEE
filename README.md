@@ -13,7 +13,7 @@ Script: [frequency-pixel-with-water.js](https://github.com/wfpidn/GEE/blob/maste
 
 ![Flood frequency](/img/ff.png)
 
-### Extract 10-days rainfallaccumulation before landslide happen
+### Extract 10-days rainfall accumulation before landslide happen
 Script: [extract-rainfall-latlon.js](https://github.com/wfpidn/GEE/blob/master/script/extract-rainfall-latlon.js)
 
 ![Rainfall 30min](/img/rain30min.png)
