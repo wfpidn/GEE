@@ -5,7 +5,9 @@ Compiled from various source: [GEE Help](https://developers.google.com/earth-eng
 ### Monthly Weather Monitoring
 ![Monthly Weather Monitoring](/img/mwm.png)
 
-
+## Disaster preparedness and response
+### Frequency of pixel with water
+![Flood frequency](/img/ff.png)
 
 ## Contact
 Benny Istanto | UN World Food Programme, Indonesia | benny.istanto@wfp.org
