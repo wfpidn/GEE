@@ -4,7 +4,7 @@ Compiled from various source: [GEE Help](https://developers.google.com/earth-eng
 ## Climate
 ---
 ### Monthly Weather Monitoring
-![mwm](/img/mwm.png)
+![Monthly Weather Monitoring](/img/mwm.png)
 
 
 ---
