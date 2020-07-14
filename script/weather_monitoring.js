@@ -16,10 +16,9 @@
 
 // Define geographic domain.
 //---
-var point = ee.Geometry.Point(118, -3);
-var region = ee.Geometry.Rectangle(92, -12, 145, 9); // Indonesia
-var bbox = ee.Feature(region).geometry(); 
-Map.centerObject(point, 6);
+var rectangle = ee.Geometry.Rectangle(92, -12, 145, 9); // Indonesia
+var bbox = ee.Feature(rectangle).geometry(); 
+Map.setCentre(118, -3, 6);
 
 
 // Import latest data from GLDAS and ERA5
@@ -51,7 +50,7 @@ var Precip = FLDAS.expression(
 var Tave = FLDAS.expression(
   'T - T0', {
     T: FLDAS.select('Tair_f_tavg'),
-    T0: 273.16
+    T0: 273.15
   }
 ).float()
 
@@ -59,7 +58,7 @@ var Tave = FLDAS.expression(
 // var Tave = ERA5.expression(
 //   'T - T0', {
 //     T: ERA5.select('mean_2m_air_temperature'),
-//     T0: 273.16
+//     T0: 273.15
 //   }
 // ).float();
 
@@ -82,13 +81,13 @@ var RH = FLDAS.expression(
 // Based on code from Gennadii Donchyts
 // https://code.earthengine.google.com/320ee5bc81f2de3ae49f348f8ec9a6d7
 var uv0 = ERA5.select(['u_component_of_wind_10m', 'v_component_of_wind_10m']);
-var uv10 = uv0.clip(region);
+var uv10 = uv0.clip(bbox);
 
 var scale = Map.getScale() * 10; //25000
 var numPixels = 1e10;
 
 var samples = uv10.rename(['u10', 'v10']).sample({
-  region: region, 
+  region: bbox, 
   scale: scale, 
   numPixels: numPixels, 
   geometries: true
