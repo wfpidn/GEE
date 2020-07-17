@@ -69,7 +69,7 @@ var Tave = FLDAS.expression(
 var RH = FLDAS.expression(
   '0.263 * p * q * (exp(17.67 * (T - T0) / (T - 29.65))) ** -1', {
     T: FLDAS.select('Tair_f_tavg'),
-    T0: 273.16,
+    T0: 273.15,
     p: FLDAS.select('Psurf_f_tavg'),
     q: FLDAS.select('Qair_f_tavg')
   }
