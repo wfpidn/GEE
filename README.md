@@ -8,7 +8,7 @@ Script: [weather_monitoring.js](https://github.com/wfpidn/GEE/blob/master/script
 ![Monthly Weather Monitoring](/img/mwm.png)
 
 ### Dry and Wet Spell
-Script: [weather_monitoring.js](https://github.com/wfpidn/GEE/blob/master/script/drywet-spell.js)
+Script: [drywet-spell.js](https://github.com/wfpidn/GEE/blob/master/script/drywet-spell.js)
 
 Consecutive Dry Days
 
