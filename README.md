@@ -7,6 +7,17 @@ Script: [weather_monitoring.js](https://github.com/wfpidn/GEE/blob/master/script
 
 ![Monthly Weather Monitoring](/img/mwm.png)
 
+### Dry and Wet Spell
+Script: [weather_monitoring.js](https://github.com/wfpidn/GEE/blob/master/script/drywet-spell.js)
+
+Consecutive Dry Days
+
+![CDD](/img/cdd.png)
+
+Consecutive Wet Days
+
+![CWD](/img/cwd.png)
+
 ## Disaster preparedness and response
 ### Frequency of pixel with water
 Script: [frequency-pixel-with-water.js](https://github.com/wfpidn/GEE/blob/master/script/frequency-pixel-with-water.js)
