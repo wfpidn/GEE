@@ -29,11 +29,11 @@ var bbox_LKA = ee.Feature(rectangle_LKA).geometry();
 
 // --------------------------
 // Import JRC Global Surface Water and extract permanent water from Seasonality layer
-var jrcA = ee.Image('JRC/GSW1_1/GlobalSurfaceWater');
+var jrcA = ee.Image('JRC/GSW1_2/GlobalSurfaceWater');
 var seasonality = jrcA.select('seasonality').clip(bbox);
 
 // Import JRC Monthly Water.
-var jrcB = ee.ImageCollection("JRC/GSW1_1/MonthlyHistory");
+var jrcB = ee.ImageCollection("JRC/GSW1_2/MonthlyHistory");
 
 
 
