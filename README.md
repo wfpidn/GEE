@@ -29,6 +29,11 @@ Script: [extract-rainfall-latlon.js](https://github.com/wfpidn/GEE/blob/master/s
 
 ![Rainfall 30min](/img/rain30min.png)
 
+### Daily rainfall forecast
+Script: [gfs-rainfallforecast.js](https://github.com/wfpidn/GEE/blob/master/script/gfs-rainfallforecast.js)
+
+![GFS](/img/gfs.png)
+
 
 ## Contact
 Benny Istanto | UN World Food Programme, Indonesia | benny.istanto@wfp.org
