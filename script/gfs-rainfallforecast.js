@@ -245,6 +245,8 @@ var img24 = ee.ImageCollection('NOAA/GFS0P25')
 Map.addLayer(img24,visRainForecast,'GFS hour24', false);
 
 
+
+/////////////////////////////
 // Access GFS data for 1-day
 var img24hv1_draft = ee.ImageCollection('NOAA/GFS0P25')
     .select('total_precipitation_surface')
