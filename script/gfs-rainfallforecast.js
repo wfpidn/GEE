@@ -1,305 +1,370 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Download rainfall forecast for 1 - 5 days ahead from NOAA GFS
+// Download GFS rainfall forecast hour-by-hour from NOAA GFS
 //
 // Benny Istanto | Earth Observation and Climate Analyst | benny.istanto@wfp.org
 // Vulnerability Analysis and Mapping (VAM) unit, UN World Food Programme - Indonesia
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+// INITIALISATION AND SYMBOLOGY
 // Center of the map
 Map.setCenter(117.7, -2.5, 5);
 
-
-
-// Strip time off current date/time
-var d = new Date();
-var today = ee.Date(d);
-print(d); // Print date for latest GFS data
-
-
-
-// GFS Dataset Availability:
-// https://developers.google.com/earth-engine/datasets/catalog/NOAA_GFS0P25#citations
-var start_period = ee.Date('2019-07-01'); // First GFS data 1 Jul 2015
-
-
-
-// MAIN INPUT
-//---
-// Import GFS data - https://developers.google.com/earth-engine/datasets/catalog/NOAA_GFS0P25
-// 24-hours/1-day forecast from selected date
-var GFS0P25_1day = ee.ImageCollection('NOAA/GFS0P25')
-  .select('total_precipitation_surface')
-  .filterMetadata('forecast_hours', 'equals', 24);
-
-// 48-hours/2-day forecast from selected date
-var GFS0P25_2day = ee.ImageCollection('NOAA/GFS0P25')
-  .select('total_precipitation_surface')
-  .filterMetadata('forecast_hours', 'equals', 48);
-
-// 72-hours/3-day forecast from selected date 
-var GFS0P25_3day = ee.ImageCollection('NOAA/GFS0P25')
-  .select('total_precipitation_surface')
-  .filterMetadata('forecast_hours', 'equals', 72);
-
-// 96-hours/4-day forecast from selected date
-var GFS0P25_4day = ee.ImageCollection('NOAA/GFS0P25')
-  .select('total_precipitation_surface')
-  .filterMetadata('forecast_hours', 'equals', 96);
-
-// 120-hours/5-day forecast from selected date
-var GFS0P25_5day = ee.ImageCollection('NOAA/GFS0P25')
-  .select('total_precipitation_surface')
-  .filterMetadata('forecast_hours', 'equals', 120);
-
-
-
-// Define an SLD style of discrete intervals to apply to the image.
-// Notes: SLD visualisation will make the data rendered as RGB during point inspector into a pixel.
-var visRainForecastSLD =
-  '<RasterSymbolizer>' +
-    '<ColorMap  type="ramp" extended="false" >' +
-      '<ColorMapEntry color="#ffffff" opacity="0.0" quantity="1" label="No Rain" />' +
-      '<ColorMapEntry color="#cccccc" opacity="0.5" quantity="3" label="1-3" />' +
-      '<ColorMapEntry color="#f9f3d5" opacity="0.5" quantity="10" label="4-10" />' +
-      '<ColorMapEntry color="#dce2a8" opacity="0.5" quantity="20" label="11-20" />' +
-      '<ColorMapEntry color="#a8c58d" opacity="0.5" quantity="30" label="21-30" />' +
-      '<ColorMapEntry color="#77a87d" opacity="0.5" quantity="40" label="31-40" />' +
-      '<ColorMapEntry color="#ace8f8" opacity="0.5" quantity="60" label="41-60" />' +
-      '<ColorMapEntry color="#4cafd9" opacity="0.5" quantity="80" label="61-80" />' +
-      '<ColorMapEntry color="#1d5ede" opacity="0.5" quantity="100" label="81-100" />' +
-      '<ColorMapEntry color="#001bc0" opacity="0.5" quantity="120" label="101-120" />' +
-      '<ColorMapEntry color="#9131f1" opacity="0.5" quantity="150" label="121-150" />' +
-      '<ColorMapEntry color="#e983f3" opacity="0.5" quantity="200" label="151-200" />' +
-      '<ColorMapEntry color="#f6c7ec" opacity="0.5" quantity="1000" label="&gt; 200" />' +
-    '</ColorMap>' +
-  '</RasterSymbolizer>'; 
-
-var visRainForecast = {min: 1, max: 50, opacity: 0.5, palette: [
+// Standard Symbology
+var visRainForecast = {min: 1, max: 100, palette: [
     'cccccc','f9f3d5','dce2a8','a8c58d','77a87d','ace8f8',
     '4cafd9','1d5ede','001bc0','9131f1','e983f3','f6c7ec'
   ]};
 
 
-
-// INITIAL PROCESS WHEN MAP LOADED
-//---
-// Add today's GFS data to the map
-var gfs1day = GFS0P25_1day    
-      .filterDate(today.advance(-1, 'day'), today)
-      .median(); // make a composite of the collection
-var layer1day = ui.Map.Layer(gfs1day.sldStyle(visRainForecastSLD),{},'GFS 1-day', true);
-// var layer1day = ui.Map.Layer(gfs1day,visRainForecast,'GFS 1-day', true);
-
-var gfs2day = GFS0P25_2day    
-      .filterDate(today.advance(-1, 'day'), today)
-      .median(); // make a composite of the collection
-var layer2day = ui.Map.Layer(gfs2day.sldStyle(visRainForecastSLD),{},'GFS 2-day', false);
-// var layer2day = ui.Map.Layer(gfs2day,visRainForecast,'GFS 2-day', false);
-
-var gfs3day = GFS0P25_3day    
-      .filterDate(today.advance(-1, 'day'), today)
-      .median(); // make a composite of the collection
-var layer3day = ui.Map.Layer(gfs3day.sldStyle(visRainForecastSLD),{},'GFS 3-day', false);
-// var layer3day = ui.Map.Layer(gfs3day,visRainForecast,'GFS 3-day', false);
-
-var gfs4day = GFS0P25_4day    
-      .filterDate(today.advance(-1, 'day'), today)
-      .median(); // make a composite of the collection
-var layer4day = ui.Map.Layer(gfs4day.sldStyle(visRainForecastSLD),{},'GFS 4-day', false);
-// var layer4day = ui.Map.Layer(gfs4day,visRainForecast,'GFS 4-day', false);
-
-var gfs5day = GFS0P25_5day    
-      .filterDate(today.advance(-1, 'day'), today)
-      .median(); // make a composite of the collection
-var layer5day = ui.Map.Layer(gfs5day.sldStyle(visRainForecastSLD),{},'GFS 5-day', false);
-// var layer5day = ui.Map.Layer(gfs5day,visRainForecast,'GFS 5-day', false);
-  
-// Reset all layers
-Map.layers().reset([layer1day,layer2day,layer3day,layer4day,layer5day]);
+// Set the date and time of data
+// GFS forecast is initialized 4 times a day (at 00, 06, 12, 18 hours GMT) so you get 4 forecasts per day 
+var date = '2021-04-04' // Set your date with format 'YYYY-MM-DD', example '2021-04-04'
+var time = 18 // You can fill the time with 00,06,12 or 18
+var dt = ee.Date(date + 'T' + time.toString() + ':00:00');
+print(dt)
 
 
 
-// Render date range function
-function renderDateRange(dateRange) {
-  var gfs1day = GFS0P25_1day
-      .filterDate(dateRange.start(), dateRange.end())
-      .median(); // make a composite of the collection
-  
-  var gfs2day = GFS0P25_2day
-      .filterDate(dateRange.start(), dateRange.end())
-      .median(); // make a composite of the collection      
+// Access GFS data hour-by-hour
+// HOUR 1
+var img1 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    // Value 1 represent hour 1 from the start of time, you can change this value to 2,3,12,24,or 120
+    .filter(ee.Filter.inList('forecast_hours', [1])) 
+    .sum();
 
-  var gfs3day = GFS0P25_3day
-      .filterDate(dateRange.start(), dateRange.end())
-      .median(); // make a composite of the collection
-      
-  var gfs4day = GFS0P25_4day
-      .filterDate(dateRange.start(), dateRange.end())
-      .median(); // make a composite of the collection
-      
-  var gfs5day = GFS0P25_5day
-      .filterDate(dateRange.start(), dateRange.end())
-      .median(); // make a composite of the collection      
-  
-  // Load the image into map
-  var layer1day = ui.Map.Layer(gfs1day.sldStyle(visRainForecastSLD),{},'GFS 1-day', true);
-  var layer2day = ui.Map.Layer(gfs2day.sldStyle(visRainForecastSLD),{},'GFS 2-day', false);
-  var layer3day = ui.Map.Layer(gfs3day.sldStyle(visRainForecastSLD),{},'GFS 3-day', false);
-  var layer4day = ui.Map.Layer(gfs4day.sldStyle(visRainForecastSLD),{},'GFS 4-day', false);
-  var layer5day = ui.Map.Layer(gfs5day.sldStyle(visRainForecastSLD),{},'GFS 5-day', false);
-  
-  // Load the image into map
-  // var layer1day = ui.Map.Layer(gfs1day,visRainForecast,'GFS 1-day', true);
-  // var layer2day = ui.Map.Layer(gfs2day,visRainForecast,'GFS 2-day', false);
-  // var layer3day = ui.Map.Layer(gfs3day,visRainForecast,'GFS 3-day', false);
-  // var layer4day = ui.Map.Layer(gfs4day,visRainForecast,'GFS 4-day', false);
-  // var layer5day = ui.Map.Layer(gfs5day,visRainForecast,'GFS 5-day', false);
-  
-  // Reset all layers
-  Map.layers().reset([layer1day,layer2day,layer3day,layer4day,layer5day]);
-}
+Map.addLayer(img1,visRainForecast,'GFS hour1', false);
+
+// HOUR 2
+var img2 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [2]))
+    .sum();
+
+Map.addLayer(img2,visRainForecast,'GFS hour2', false);
+
+// HOUR 3
+var img3 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [3]))
+    .sum();
+
+Map.addLayer(img3,visRainForecast,'GFS hour3', false);
+
+// HOUR 4
+var img4 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [4]))
+    .sum();
+
+Map.addLayer(img4,visRainForecast,'GFS hour4', false);
+
+// HOUR 5
+var img5 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [5]))
+    .sum();
+
+Map.addLayer(img5,visRainForecast,'GFS hour5', false);
+
+// HOUR 6
+var img6 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [6]))
+    .sum();
+
+Map.addLayer(img6,visRainForecast,'GFS hour6', false);
+
+// HOUR 7
+var img7 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [7]))
+    .sum();
+
+Map.addLayer(img7,visRainForecast,'GFS hour7', false);
+
+// HOUR 8
+var img8 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [8]))
+    .sum();
+
+Map.addLayer(img8,visRainForecast,'GFS hour8', false);
+
+// HOUR 9
+var img9 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [9]))
+    .sum();
+
+Map.addLayer(img9,visRainForecast,'GFS hour9', false);
+
+// HOUR 10
+var img10 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [10]))
+    .sum();
+
+Map.addLayer(img10,visRainForecast,'GFS hour10', false);
+
+// HOUR 11
+var img11 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [11]))
+    .sum();
+
+Map.addLayer(img11,visRainForecast,'GFS hour11', false);
+
+// HOUR 12
+var img12 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [12]))
+    .sum();
+
+Map.addLayer(img12,visRainForecast,'GFS hour12', false);
+
+// HOUR 13
+var img13 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [13]))
+    .sum();
+
+Map.addLayer(img13,visRainForecast,'GFS hour13', false);
+
+// HOUR 14
+var img14 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [14]))
+    .sum();
+
+Map.addLayer(img14,visRainForecast,'GFS hour14', false);
+
+// HOUR 15
+var img15 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [15]))
+    .sum();
+
+Map.addLayer(img15,visRainForecast,'GFS hour15', false);
+
+// HOUR 16
+var img16 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [16]))
+    .sum();
+
+Map.addLayer(img16,visRainForecast,'GFS hour16', false);
+
+// HOUR 17
+var img17 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [17]))
+    .sum();
+
+Map.addLayer(img17,visRainForecast,'GFS hour17', false);
+
+// HOUR 18
+var img18 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [18]))
+    .sum();
+
+Map.addLayer(img18,visRainForecast,'GFS hour18', false);
+
+// HOUR 19
+var img19 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [19]))
+    .sum();
+
+Map.addLayer(img19,visRainForecast,'GFS hour19', false);
+
+// HOUR 20
+var img20 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [20]))
+    .sum();
+
+Map.addLayer(img20,visRainForecast,'GFS hour20', false);
+
+// HOUR 21
+var img21 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [21]))
+    .sum();
+
+Map.addLayer(img21,visRainForecast,'GFS hour21', false);
+
+// HOUR 22
+var img22 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [22]))
+    .sum();
+
+Map.addLayer(img22,visRainForecast,'GFS hour22', false);
+
+// HOUR 23
+var img23 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [23]))
+    .sum();
+
+Map.addLayer(img23,visRainForecast,'GFS hour23', false);
+
+// HOUR 24
+var img24 = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [24]))
+    .sum();
+
+Map.addLayer(img24,visRainForecast,'GFS hour24', false);
+
+
+// Access GFS data for 1-day
+var img24hv1_draft = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
+    .sum();
+
+// Masked rainfall less than 0.01
+var img24hv1 = img24hv1_draft.updateMask(img24hv1_draft.gt(0.01));
+Map.addLayer(img24hv1,visRainForecast,'GFS 1-day v1', true);
+
+
+// Access GFS data for 2-day
+var img48hv1_draft = ee.ImageCollection('NOAA/GFS0P25')
+    .select('total_precipitation_surface')
+    .filterDate(dt, dt.advance(6,'hour'))
+    .filter(ee.Filter.inList('forecast_hours', [6,12,18,24,30,36,42,48]))
+    .sum();
+
+// Masked rainfall less than 0.01
+var img48hv1 = img48hv1_draft.updateMask(img48hv1_draft.gt(0.01));
+Map.addLayer(img48hv1,visRainForecast,'GFS 2-days v1', true);
+
+
+//Mosaic into single image for 6,12,18,24
+var imghh_bands = img6
+  .addBands(img12)
+  .addBands(img18)
+  .addBands(img24);
+
+var img24hv2_draft = imghh_bands.expression(
+    'R1+R2+R3+R4', {
+      'R1': imghh_bands.select('total_precipitation_surface'),
+      'R2': imghh_bands.select('total_precipitation_surface_1'),
+      'R3': imghh_bands.select('total_precipitation_surface_2'),
+      'R4': imghh_bands.select('total_precipitation_surface_3')
+    }
+).float();
+
+// Masked rainfall less than 0.01
+var img24hv2 = img24hv2_draft.updateMask(img24hv2_draft.gt(0.01));    
+Map.addLayer(img24hv2,visRainForecast,'GFS 1-day v2', true);
 
 
 
-// DATE SLIDER CONFIG
-//---
-// UI widgets needs client-side data .evaluate() to get client-side values of start and end period
-ee.Dictionary({start: start_period, end: today.advance(1, 'day')})
-  .evaluate(renderSlider);
-
-// Slider function
-function renderSlider(dates) {
-  var slider = ui.DateSlider({
-    start: dates.start.value, 
-    end: dates.end.value, 
-    period: 1, // Every 5 days
-    style: {width: '300px', padding: '10px'},
-    onChange: renderDateRange
-  });
-  Map.add(slider);
-  slider.setValue(today);
-}
 
 
-
-// Legend
+////////////////////////////////
+// Panel for legend
 // Set position of panel
 var legend = ui.Panel({
   style: {
-    position: 'bottom-left',
-    padding: '8px 15px'
+  position: 'bottom-right',
+  padding: '8px 15px'
   }
 });
  
 // Create legend title
 var legendTitle = ui.Label({
-  value: 'Rainfall forecast',
+  value: 'GFS Rainfall Forecast',
   style: {
-    fontWeight: 'bold',
-    fontSize: '14px',
-    margin: '0 0 4px 0',
-    padding: '0'
-    }
+  fontWeight: 'bold',
+  fontSize: '18px',
+  margin: '0 0 4px 0',
+  padding: '0'
+  }
 });
  
 // Add the title to the panel
 legend.add(legendTitle);
  
-// Creates and styles 1 row of the legend.
-var makeRow = function(color, name) {
+////////////////////////////////
+// Legend using standard symbology
+// Create the legend image
+var lon = ee.Image.pixelLonLat().select('latitude');
+var gradient = lon.multiply((visRainForecast.max-visRainForecast.min)/100.0).add(visRainForecast.min);
+var legendImage = gradient.visualize(visRainForecast);
  
-      // Create the label that is actually the colored box.
-      var colorBox = ui.Label({
-        style: {
-          backgroundColor: '#' + color,
-          // Use padding to give the box height and width.
-          padding: '8px',
-          margin: '0 0 4px 0'
-        }
-      });
+// Create text on top of legend
+var panel = ui.Panel({
+  widgets: [
+    ui.Label(visRainForecast['max'])
+    ],
+  });
  
-      // Create the label filled with the description text.
-      var description = ui.Label({
-        value: name,
-        style: {margin: '0 0 4px 6px'}
-      });
+legend.add(panel);
  
-      // return the panel
-      return ui.Panel({
-        widgets: [colorBox, description],
-        layout: ui.Panel.Layout.Flow('horizontal')
-      });
-};
-
-
-
-// Visualization palette for total precipitation - Color-codes based on Color-Brewer https://colorbrewer2.org/
-// Palette with the colors for legend in UI Panel
-var palette =['ffffff','cccccc','f9f3d5','dce2a8','a8c58d','77a87d','ace8f8','4cafd9','1d5ede','001bc0','9131f1','e983f3','f6c7ec']; 
-
-// Name of the legend for legend in UI Panel
-var names = ['No Rain ~ No color','1 - 3 milimeters','4 - 10','11 - 20','21 - 30','31 - 40','41 - 60','61 - 80','81 - 100','101 - 120','121 - 150','151 - 200','> 200'];
-
-// Add color and and names
-for (var i = 0; i < 13; i++) {
-  legend.add(makeRow(palette[i], names[i]));
-  }  
+// Create thumbnail from the image
+var thumbnail = ui.Thumbnail({
+  image: legendImage,
+  params: {bbox:'0,0,10,100', dimensions:'10x200'},
+  style: {padding: '1px', position: 'bottom-center'}
+  });
  
-
+// Add the thumbnail to the legend
+legend.add(thumbnail);
  
-// Add legend to map 
+// Create text on bottom of legend
+var panel = ui.Panel({
+  widgets: [
+    ui.Label(visRainForecast['min'])
+    ],
+  });
+ 
+legend.add(panel);
+
 Map.add(legend);
 
 
-
+////////////////////////////////
+// 
 // Subset for downloading data
 var rectangle_RBB = ee.Geometry.Rectangle(60, -80, 180, 80);
 var bbox_RBB = ee.Feature(rectangle_RBB).geometry();
 
 
-
 // Export the result to Google Drive
 Export.image.toDrive({
-  image:gfs1day,
-  description:'GFS-1day',
-  folder:'GEE_GFS',
-  scale:5600,
-  region:bbox_RBB,
-  maxPixels:1e12
-});
-
-Export.image.toDrive({
-  image:gfs2day,
-  description:'GFS-2day',
-  folder:'GEE_GFS',
-  scale:5600,
-  region:bbox_RBB,
-  maxPixels:1e12
-});
-
-Export.image.toDrive({
-  image:gfs3day,
-  description:'GFS-3day',
-  folder:'GEE_GFS',
-  scale:5600,
-  region:bbox_RBB,
-  maxPixels:1e12
-});
-
-Export.image.toDrive({
-  image:gfs4day,
-  description:'GFS-4day',
-  folder:'GEE_GFS',
-  scale:5600,
-  region:bbox_RBB,
-  maxPixels:1e12
-});
-
-Export.image.toDrive({
-  image:gfs5day,
-  description:'GFS-5day',
+  image:img24hv1,
+  description:'1-day_gfs_rainfall_forecast',
   folder:'GEE_GFS',
   scale:5600,
   region:bbox_RBB,
