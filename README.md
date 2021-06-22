@@ -2,8 +2,13 @@
 Compiled from various source: [GEE Help](https://developers.google.com/earth-engine/), [StackExchange](https://gis.stackexchange.com/questions/tagged/google-earth-engine), [GEE Google Groups](https://groups.google.com/forum/#!forum/google-earth-engine-developers).
 
 ## Climate
+### Daily Weather Forecast
+Script: [gfs-daily-weather-forecast.js](https://github.com/wfpidn/GEE/blob/master/script/gfs-daily-weather-forecast.js)
+
+![Daily Weather Forecast](/img/dwf.png)
+
 ### Monthly Weather Monitoring
-Script: [weather_monitoring.js](https://github.com/wfpidn/GEE/blob/master/script/weather_monitoring.js)
+Script: [weather-monitoring.js](https://github.com/wfpidn/GEE/blob/master/script/weather-monitoring.js)
 
 ![Monthly Weather Monitoring](/img/mwm.png)
 
