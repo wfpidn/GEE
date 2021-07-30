@@ -302,7 +302,7 @@ function renderDateRange(dateRange) {
   // 2m Temperature
   var tave_d1_draft = GFS0P25 
         .select('temperature_2m_above_ground')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .mean(); // make a composite of the collection
@@ -313,7 +313,7 @@ function renderDateRange(dateRange) {
   // 2m Specific Humidity
   var sh_d1_draft = GFS0P25 
         .select('specific_humidity_2m_above_ground')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .mean(); // make a composite of the collection
@@ -331,7 +331,7 @@ function renderDateRange(dateRange) {
   // 2m Relative Humidity
   var rh_d1_draft = GFS0P25 
         .select('relative_humidity_2m_above_ground')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .mean(); // make a composite of the collection
@@ -342,7 +342,7 @@ function renderDateRange(dateRange) {
   // 10m wind
   var uv_d1_draft = GFS0P25
     .select(['u_component_of_wind_10m_above_ground', 'v_component_of_wind_10m_above_ground'])
-    .filterDate(today, today.advance(6,'hour'))
+    .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
     .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
     .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
     .mean(); // make a composite of the collection
@@ -387,7 +387,7 @@ function renderDateRange(dateRange) {
   // Precipitation
   var pcp_d1_draft = GFS0P25 
         .select('total_precipitation_surface')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .sum(); // make a composite of the collection
@@ -399,7 +399,7 @@ function renderDateRange(dateRange) {
   // Precipitable Water
   var pw_d1_draft = GFS0P25 
         .select('precipitable_water_entire_atmosphere')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .mean(); // make a composite of the collection
@@ -411,7 +411,7 @@ function renderDateRange(dateRange) {
   // Total Cloud Cover
   var cc_d1_draft = GFS0P25 
         .select('total_cloud_cover_entire_atmosphere')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .mean(); // make a composite of the collection
@@ -423,7 +423,7 @@ function renderDateRange(dateRange) {
   // Downward Shortwave Radiation Flux
   var sr_d1_draft = GFS0P25 
         .select('downward_shortwave_radiation_flux')
-        .filterDate(today, today.advance(6,'hour'))
+        .filterDate(dateRange.start(), dateRange.end().advance(6,'hour'))
         .filter(ee.Filter.lt('forecast_time',today.advance(1,'day').millis()))
         .filter(ee.Filter.inList('forecast_hours', [6,12,18,24]))
         .mean(); // make a composite of the collection
